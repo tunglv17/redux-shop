@@ -124,6 +124,9 @@
    .item{
        margin: 0px 7%;
    }
+   .img img {
+     width: 300px;
+   }
    .sub-product{
        padding-bottom: 20px;
    }

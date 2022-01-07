@@ -7,3 +7,7 @@ export interface typeProduct {
     image:string,
     rate:number
 }
+export interface typeCategory {
+    id:string,
+    name: string
+}

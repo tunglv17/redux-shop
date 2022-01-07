@@ -1,24 +1,28 @@
-import React, { useEffect, useState } from 'react'
-import { useParams, useHistory } from 'react-router-dom';
-import { Button, Form, Input, Select, Upload } from "antd";
-import { UploadOutlined } from '@ant-design/icons';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../../redux/store';
-import { getProducts, updateProduct } from '../../../redux/product/action';
-import { typeProduct } from '../../../type/product';
+import  { useEffect, useState } from "react";
+import { useParams, useHistory } from "react-router-dom";
+import { Button, Form, Input, message, Select, Upload } from "antd";
+import { UploadOutlined } from "@ant-design/icons";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../../redux/store";
+import { getProducts, updateProduct } from "../../../redux/product/action";
+import { typeProduct } from "../../../type/product";
 const EditProducts = () => {
-    const listProducts = useSelector((state: RootState) => state.listProduct.products);
+    const listProducts = useSelector(
+        (state: RootState) => state.listProduct.products
+    );
+    const listCategory = useSelector(
+        (state: RootState) => state.listCategory.category
+    );
 
-
-    const [name, setName] = useState("")
-    const [category, setCategory] = useState("")
-    const [price, setPrice] = useState("")
-    const [image, setImage] = useState("")
-    const [description, setDescription] = useState("")
-    const [rate, setRate] = useState(0)
+    const [name, setName] = useState("");
+    const [category, setCategory] = useState("");
+    const [price, setPrice] = useState("");
+    const [image, setImage] = useState("");
+    const [description, setDescription] = useState("");
+    const [rate, setRate] = useState(0);
     const { id }: any = useParams();
     const history = useHistory();
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
     const [form] = Form.useForm();
     const [requiredMark, setRequiredMarkType] = useState("");
 
@@ -26,7 +30,7 @@ const EditProducts = () => {
         setRequiredMarkType(requiredMarkValue);
     };
     const normFile = (e: any) => {
-        console.log('Upload event:', e);
+        console.log("Upload event:", e);
 
         if (Array.isArray(e)) {
             return e;
@@ -34,6 +38,7 @@ const EditProducts = () => {
 
         return e && e.fileList;
     };
+    const { TextArea } = Input;
     useEffect(() => {
         const getProductById = async () => {
             if (id && listProducts) {
@@ -43,7 +48,7 @@ const EditProducts = () => {
                 setName(product[0].name);
                 setCategory(product[0].category);
                 setRate(product[0].rate);
-                setDescription(product[0].description)
+                setDescription(product[0].description);
                 setPrice(product[0].price);
                 setImage(product[0].image);
             }
@@ -56,17 +61,20 @@ const EditProducts = () => {
     }, [listProducts]);
 
     const handleSubmit = () => {
-        dispatch(updateProduct({
-            id: id,
-            name: name,
-            category: category,
-            price: price,
-            image: image,
-            description: description,
-            rate: rate
-        }))
-        history.push('/admin/product');
-    }
+        dispatch(
+            updateProduct({
+                id: id,
+                name: name,
+                category: category,
+                price: price,
+                image: image,
+                description: description,
+                rate: rate,
+            })
+        );
+        history.push("/admin/product");
+        message.success("Success");
+    };
     return (
         <div>
             <Form
@@ -80,14 +88,27 @@ const EditProducts = () => {
                 <Form.Item label="Name" rules={[{ required: true }]}>
                     <Input value={name} onChange={(e) => setName(e.target.value)} />
                 </Form.Item>
-                <Form.Item label="Category" rules={[{ required: true }]}>
-                    <Input value={category} onChange={(e) => setCategory(e.target.value)} />
+                <Form.Item label="Category">
+                    <Select onChange={(e) => setCategory(e)} value={category}>
+                        {listCategory.map((item: any) => {
+                            return <Select.Option value={item.id}>{item.name}</Select.Option>;
+                        })}
+                    </Select>
                 </Form.Item>
                 <Form.Item label="Price" rules={[{ required: true }]}>
-                    <Input type="number" value={price} onChange={(e) => setPrice(e.target.value)} />
+                    <Input
+                        type="number"
+                        value={price}
+                        onChange={(e) => setPrice(e.target.value)}
+                    />
                 </Form.Item>
                 <Form.Item label="Description" rules={[{ required: true }]}>
-                    <Input value={description} onChange={(e) => setDescription(e.target.value)} />
+                    <TextArea
+                        value={description}
+                        rows={4}
+                        placeholder="Description"
+                        onChange={(e) => setDescription(e.target.value)}
+                    />
                 </Form.Item>
                 <Form.Item
                     name="Image"
@@ -96,7 +117,12 @@ const EditProducts = () => {
                     getValueFromEvent={normFile}
                     extra=""
                 >
-                    <Upload name="logo" action="/upload.do" listType="picture" onChange={(e) => setImage(e.file.name)}>
+                    <Upload
+                        name="logo"
+                        action="/upload.do"
+                        listType="picture"
+                        onChange={(e) => setImage(e.file.name)}
+                    >
                         <Button icon={<UploadOutlined />}>Click to upload</Button>
                     </Upload>
                 </Form.Item>
@@ -117,7 +143,7 @@ const EditProducts = () => {
                 </Form.Item>
             </Form>
         </div>
-    )
-}
+    );
+};
 
-export default EditProducts
+export default EditProducts;

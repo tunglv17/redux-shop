@@ -1,6 +1,7 @@
 import { Rate } from 'antd';
 import React from 'react'
 import { useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { RootState } from '../redux/store';
 import { typeProduct } from '../type/product';
 import Filter from './Filter';
@@ -21,7 +22,7 @@ const ListProducts = () => {
                                     <div className="sub-product">
                                         <div className="title">
                                             <div className="product-name">
-                                                <h4 className="title-heading">{item.name}</h4>
+                                                <Link to={`/${item.id}`}> <h4 className="title-heading">{item.name}</h4></Link>
                                                 <h4 className="category">{item.category}</h4>
                                             </div>
                                             <p className="price">$:{item.price}</p>
